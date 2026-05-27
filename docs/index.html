@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garmin Running Analytics · Devyn Simmons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:  #0F172A;
+    --blue:  #2563EB;
+    --green: #16A34A;
+    --gray:  #6B7280;
+    --lgray: #F1F5F9;
+    --white: #FFFFFF;
+    --border:#E2E8F0;
+  }
+  body { font-family: 'Inter', sans-serif; background: #F8FAFC; color: var(--navy); }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--navy);
+    padding: 56px 40px 48px;
+    text-align: center;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(37,99,235,0.25);
+    color: #93C5FD;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 16px;
+    color: #94A3B8;
+    max-width: 580px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+  }
+  .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity 0.15s;
+  }
+  .btn:hover { opacity: 0.85; text-decoration: none; }
+  .btn-primary { background: var(--blue); color: var(--white); }
+  .btn-outline { background: transparent; color: var(--white); border: 1.5px solid #475569; }
+
+  /* ── Stats strip ── */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-item {
+    padding: 28px 24px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-val {
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--blue);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11.5px;
+    color: var(--gray);
+    margin-top: 6px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Main layout ── */
+  .main { max-width: 1180px; margin: 0 auto; padding: 56px 28px; }
+  .section { margin-bottom: 64px; }
+  .section-header { margin-bottom: 32px; }
+  .section-tag {
+    display: inline-block;
+    background: #EFF6FF;
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .section-header h2 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .section-header p {
+    font-size: 15px;
+    color: var(--gray);
+    margin-top: 8px;
+    line-height: 1.65;
+    max-width: 680px;
+  }
+
+  /* ── Dashboard CTA ── */
+  .dashboard-cta {
+    background: linear-gradient(135deg, #1E40AF 0%, #1D4ED8 100%);
+    border-radius: 16px;
+    padding: 36px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 64px;
+  }
+  .dashboard-cta h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .dashboard-cta p {
+    font-size: 14px;
+    color: #BFDBFE;
+    max-width: 480px;
+    line-height: 1.6;
+  }
+  .btn-white {
+    background: var(--white);
+    color: #1D4ED8;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ── Findings ── */
+  .findings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .finding-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .finding-icon { font-size: 26px; margin-bottom: 12px; }
+  .finding-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .finding-card p { font-size: 13.5px; color: #374151; line-height: 1.65; }
+
+  /* ── Charts ── */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+  }
+  .chart-card, .stat-chart-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s;
+  }
+  .chart-card:hover, .stat-chart-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  }
+  .chart-card img, .stat-chart-card img {
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid var(--border);
+  }
+  .chart-info { padding: 16px 18px 18px; }
+  .chart-info h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .chart-info p  { font-size: 12.5px; color: var(--gray); line-height: 1.6; }
+
+  /* ── Tech stack ── */
+  .tech-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tech-pill {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    background: var(--navy);
+    color: #64748B;
+    font-size: 13px;
+  }
+  footer a { color: #94A3B8; }
+
+  @media (max-width: 640px) {
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
+    .hero { padding: 40px 20px 36px; }
+    .main { padding: 36px 16px; }
+    .dashboard-cta { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-tag">Sports Analytics · Personal Project</div>
+  <h1>Garmin Running Analytics</h1>
+  <p>A 15-month analysis of personal GPS running data — exploring pace trends, heart rate zones, training load, and the data story behind a runner's knee injury.</p>
+  <div class="hero-btns">
+    <a href="dashboard.html" class="btn btn-primary">Live Dashboard</a>
+    <a href="https://github.com/YOUR-GITHUB-USERNAME/garmin-analytics" class="btn btn-outline" target="_blank">View on GitHub</a>
+  </div>
+</div>
+
+<!-- Stats strip -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-val">123</div>
+    <div class="stat-label">Total Runs</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val">402</div>
+    <div class="stat-label">Miles Logged</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val">51</div>
+    <div class="stat-label">Peak VO₂Max</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val">8:58</div>
+    <div class="stat-label">Median Pace (min/mi)</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Dashboard CTA -->
+  <div class="dashboard-cta">
+    <div>
+      <h2>Weekly Training Dashboard</h2>
+      <p>An auto-refreshing dashboard pulling live data from Garmin Connect. Shows CTL/ATL/TSB training load, HR zone distribution, weekly mileage, injury risk score, and a personalized coach's note.</p>
+    </div>
+    <a href="dashboard.html" class="btn btn-white">Open Dashboard →</a>
+  </div>
+
+  <!-- Key Findings -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">Key Findings</div>
+      <h2>What the data revealed</h2>
+      <p>Statistical analysis using non-parametric tests, OLS regression, and the Banister training load model.</p>
+    </div>
+    <div class="findings-grid">
+      <div class="finding-card">
+        <div class="finding-icon">📉</div>
+        <h3>Pace Trend Paradox</h3>
+        <p>Average pace slowed significantly over the study period (ρ = +0.40, p &lt; 0.001) — but OLS regression showed distance was not the confounder. The shift reflects a transition from short, high-intensity runs to longer aerobic base work.</p>
+      </div>
+      <div class="finding-card">
+        <div class="finding-icon">🫀</div>
+        <h3>VO₂Max Progression</h3>
+        <p>VO₂Max peaked at 51 in early 2026 before declining as injury-related mileage drops reduced aerobic stimulus — consistent with the principle that fitness requires sustained load to maintain.</p>
+      </div>
+      <div class="finding-card">
+        <div class="finding-icon">⚠️</div>
+        <h3>Injury Signature</h3>
+        <p>Runner's knee onset (Feb 2026) was preceded by an 18-mile week (+112% mileage spike), TSB of −9.2, and a 9-mile "Very Hard" run three weeks before the half marathon. The data tells the injury story clearly.</p>
+      </div>
+      <div class="finding-card">
+        <div class="finding-icon">😴</div>
+        <h3>Recovery Gap Effect</h3>
+        <p>Runs within 1 day of a prior run were significantly slower than those with 2+ days rest (Mann-Whitney U, p = 0.003). Adequate recovery is measurably reflected in pace performance.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDA Charts -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">Exploratory Analysis</div>
+      <h2>Training patterns & physiological trends</h2>
+      <p>Dec 2024 – Apr 2026 · 123 runs · 402 miles</p>
+    </div>
+    <div class="charts-grid">
+      
+        <div class="chart-card">
+          <img src="assets/01_weekly_mileage.png" alt="Weekly Mileage" loading="lazy">
+          <div class="chart-info">
+            <h3>Weekly Mileage</h3>
+            <p>Total miles run per week with 4-week rolling average. Red bars flag >10% week-over-week spikes — the leading predictor of overuse injury.</p>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <img src="assets/02_pace_distribution.png" alt="Pace Distribution" loading="lazy">
+          <div class="chart-info">
+            <h3>Pace Distribution</h3>
+            <p>Histogram of average pace across all runs. Q1/median/Q3 marked. The spread reflects training variety from recovery jogs to race-effort runs.</p>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <img src="assets/03_pace_vs_hr.png" alt="Pace vs. Heart Rate" loading="lazy">
+          <div class="chart-info">
+            <h3>Pace vs. Heart Rate</h3>
+            <p>Each dot is one run, colored by effort zone. The trend line shows the expected pace–HR tradeoff; outliers reveal unusually good or bad days.</p>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <img src="assets/04_vo2max_efficiency.png" alt="VO₂Max & Efficiency" loading="lazy">
+          <div class="chart-info">
+            <h3>VO₂Max & Efficiency</h3>
+            <p>Monthly VO₂Max estimate alongside aerobic efficiency factor (speed/HR). Both track fitness improvement independently of pace.</p>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <img src="assets/05_hr_zone_totals.png" alt="HR Zone Distribution" loading="lazy">
+          <div class="chart-info">
+            <h3>HR Zone Distribution</h3>
+            <p>Total training time by heart rate zone. Zone 1–2 dominance reflects a polarized base-building approach (~80/20 training).</p>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <img src="assets/06_training_load.png" alt="ATL / CTL / TSB" loading="lazy">
+          <div class="chart-info">
+            <h3>ATL / CTL / TSB</h3>
+            <p>The Banister model: Chronic Training Load (fitness), Acute Training Load (fatigue), and Training Stress Balance (form). Negative TSB at injury onset confirms the overreaching diagnosis.</p>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <img src="assets/07_day_of_week.png" alt="Day-of-Week Patterns" loading="lazy">
+          <div class="chart-info">
+            <h3>Day-of-Week Patterns</h3>
+            <p>Run frequency and average distance by day of week. Saturday long runs and midweek recovery runs emerge as the dominant training structure.</p>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Statistical Analysis -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">Statistical Analysis</div>
+      <h2>Significance testing & regression</h2>
+      <p>Spearman correlations, Kruskal-Wallis H-tests, Mann-Whitney U with Bonferroni correction, and OLS regression with confidence intervals.</p>
+    </div>
+    <div class="charts-grid">
+      
+        <div class="stat-chart-card">
+          <img src="assets/08_correlation_matrix.png" alt="Spearman Correlation Matrix" loading="lazy">
+          <div class="chart-info">
+            <h3>Spearman Correlation Matrix</h3>
+            <p>Non-parametric correlations between all key running metrics.</p>
+          </div>
+        </div>
+
+        <div class="stat-chart-card">
+          <img src="assets/09_pace_trend.png" alt="Pace Trend Over Time" loading="lazy">
+          <div class="chart-info">
+            <h3>Pace Trend Over Time</h3>
+            <p>OLS regression with 95% CI. Pace slowed +0.024 min/mi per week — driven by volume, not fitness decline.</p>
+          </div>
+        </div>
+
+        <div class="stat-chart-card">
+          <img src="assets/10_recovery_vs_pace.png" alt="Recovery Gap vs. Pace" loading="lazy">
+          <div class="chart-info">
+            <h3>Recovery Gap vs. Pace</h3>
+            <p>Mann-Whitney U: runs within 1 day of a prior run are significantly slower (p = 0.003).</p>
+          </div>
+        </div>
+
+        <div class="stat-chart-card">
+          <img src="assets/11_season_pace.png" alt="Pace by Season" loading="lazy">
+          <div class="chart-info">
+            <h3>Pace by Season</h3>
+            <p>Kruskal-Wallis: seasonal pace differences are statistically significant (p < 0.05).</p>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Tech Stack -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">Tech Stack</div>
+      <h2>Built with</h2>
+    </div>
+    <div class="tech-grid">
+      <span class="tech-pill">Python 3.13</span><span class="tech-pill">pandas</span><span class="tech-pill">NumPy</span><span class="tech-pill">Matplotlib</span><span class="tech-pill">Seaborn</span><span class="tech-pill">Plotly</span><span class="tech-pill">SciPy</span><span class="tech-pill">statsmodels</span><span class="tech-pill">fitparse</span><span class="tech-pill">garminconnect</span><span class="tech-pill">Jupyter</span><span class="tech-pill">GitHub Pages</span>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Built by <strong style="color:#CBD5E1">Devyn Simmons</strong> &nbsp;·&nbsp;
+  <a href="https://github.com/YOUR-GITHUB-USERNAME/garmin-analytics" target="_blank">GitHub</a> &nbsp;·&nbsp; 2026</p>
+</footer>
+
+</body>
+</html>
